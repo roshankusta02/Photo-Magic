@@ -1,34 +1,101 @@
-// Is hisse ko apne script mein update karein
-document.getElementById('uploadInput').onchange = async (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Photo Magic Studio</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f0f2f5; text-align: center; padding: 20px; color: #333; }
+        .box { background: white; max-width: 500px; margin: 40px auto; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+        h2 { color: #4f46e5; margin-bottom: 20px; }
+        input[type="file"] { margin-bottom: 20px; padding: 10px; border: 1px dashed #4f46e5; width: 80%; border-radius: 10px; }
+        button { background: #4f46e5; color: white; border: none; padding: 14px 20px; border-radius: 12px; cursor: pointer; margin: 8px 0; width: 100%; font-size: 16px; font-weight: 600; transition: 0.3s; }
+        button:hover { background: #4338ca; transform: translateY(-2px); }
+        img { max-width: 100%; margin-top: 25px; border-radius: 12px; display: none; border: 3px solid #e5e7eb; }
+        #msg { font-weight: bold; margin: 15px 0; min-height: 20px; }
+        .download-btn { display: none; margin-top: 15px; color: #4f46e5; text-decoration: none; font-weight: bold; }
+    </style>
+</head>
+<body>
 
-    document.getElementById('msg').innerText = "Uploading... Please wait ⏳";
-    document.getElementById('msg').style.color = "blue";
+    <div class="box">
+        <h2>✨ AI Photo Editor</h2>
+        <input type="file" id="uploadInput" accept="image/*">
+        <p id="msg">Pehle photo select karein</p>
+        
+        <button onclick="processImage('enhance')">🪄 Photo Saaf Karein (Enhance)</button>
+        <button onclick="processImage('bg-remove')">✂️ Background Hatayein</button>
+        <button onclick="processImage('colorize')">🎨 B&W ko Rangeen Karein</button>
 
-    const formData = new FormData();
-    formData.append('file', file);
-    formData.append('upload_preset', MY_PRESET);
+        <img id="outputImg" src="">
+        <br>
+        <a id="dlLink" href="#" download class="download-btn">⬇️ Download Enhanced Photo</a>
+    </div>
 
-    try {
-        const res = await fetch(`https://api.cloudinary.com/v1_1/${MY_CLOUD}/image/upload`, {
-            method: 'POST', body: formData
-        });
-        const data = await res.json();
+    <script>
+        // --- YAHAN APNI DETAILS DALEIN ---
+        const MY_CLOUD = "roshankusta02"; // Apna Cloud Name yahan check karein
+        const MY_PRESET = "MY_CLOUD"; // Apna Unsigned Preset yahan likhein
+        // --------------------------------
 
-        // Agar upload sahi hua toh hi Success dikhayega
-        if (data.secure_url) {
-            mainUrl = data.secure_url;
-            document.getElementById('msg').innerText = "✅ Photo Upload Ho Gayi! Ab Magic Button dabayein.";
-            document.getElementById('msg').style.color = "green";
-        } else {
-            // Agar Cloudinary error de raha hai
-            console.error("Cloudinary Error:", data);
-            document.getElementById('msg').innerText = "❌ Error: " + (data.error ? data.error.message : "Upload fail ho gaya");
-            document.getElementById('msg').style.color = "red";
+        let mainUrl = "";
+
+        // Photo Upload Function
+        document.getElementById('uploadInput').onchange = async (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const msgTag = document.getElementById('msg');
+            msgTag.innerText = "Uploading... Please wait ⏳";
+            msgTag.style.color = "blue";
+
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('upload_preset', MY_PRESET);
+
+            try {
+                const res = await fetch(`https://api.cloudinary.com/v1_1/${MY_CLOUD}/image/upload`, {
+                    method: 'POST', body: formData
+                });
+                const data = await res.json();
+
+                if (data.secure_url) {
+                    mainUrl = data.secure_url;
+                    msgTag.innerText = "✅ Photo Upload Ho Gayi! Magic Button dabayein.";
+                    msgTag.style.color = "green";
+                } else {
+                    msgTag.innerText = "❌ Error: " + (data.error ? data.error.message : "Upload fail");
+                    msgTag.style.color = "red";
+                }
+            } catch (err) {
+                msgTag.innerText = "❌ Connection Error! Check settings.";
+                msgTag.style.color = "red";
+            }
+        };
+
+        // Magic Processing Function
+        function processImage(type) {
+            if(!mainUrl) {
+                alert("Pehle photo upload hone ka intezar karein!");
+                return;
+            }
+            
+            document.getElementById('msg').innerText = "AI Magic Chal raha hai... ✨";
+            
+            let finalUrl = "";
+            if(type === 'enhance') finalUrl = mainUrl.replace('/upload/', '/upload/e_enhance,q_auto,f_auto/');
+            if(type === 'bg-remove') finalUrl = mainUrl.replace('/upload/', '/upload/e_background_removal/');
+            if(type === 'colorize') finalUrl = mainUrl.replace('/upload/', '/upload/e_colorize/');
+
+            const imgTag = document.getElementById('outputImg');
+            imgTag.src = finalUrl;
+            imgTag.style.display = "inline-block";
+            
+            const dl = document.getElementById('dlLink');
+            dl.href = finalUrl;
+            dl.style.display = "inline-block";
+            document.getElementById('msg').innerText = "Taiyar hai! Niche dekhein.";
         }
-    } catch (err) {
-        document.getElementById('msg').innerText = "❌ Connection Error! Check internet ya Cloud Name.";
-        document.getElementById('msg').style.color = "red";
-    }
-};
+    </script>
+</body>
+</html>
