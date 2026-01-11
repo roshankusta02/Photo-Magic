@@ -5,14 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Photo Magic Studio</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f0f2f5; text-align: center; padding: 20px; color: #333; }
+        body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; text-align: center; padding: 20px; }
         .box { background: white; max-width: 500px; margin: 40px auto; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
-        h2 { color: #4f46e5; margin-bottom: 20px; }
+        h2 { color: #4f46e5; }
         input[type="file"] { margin-bottom: 20px; padding: 10px; border: 1px dashed #4f46e5; width: 80%; border-radius: 10px; }
         button { background: #4f46e5; color: white; border: none; padding: 14px 20px; border-radius: 12px; cursor: pointer; margin: 8px 0; width: 100%; font-size: 16px; font-weight: 600; transition: 0.3s; }
         button:hover { background: #4338ca; transform: translateY(-2px); }
         img { max-width: 100%; margin-top: 25px; border-radius: 12px; display: none; border: 3px solid #e5e7eb; }
-        #msg { font-weight: bold; margin: 15px 0; min-height: 20px; }
+        #msg { font-weight: bold; margin: 15px 0; }
         .download-btn { display: none; margin-top: 15px; color: #4f46e5; text-decoration: none; font-weight: bold; }
     </style>
 </head>
@@ -34,8 +34,8 @@
 
     <script>
         // --- YAHAN APNI DETAILS DALEIN ---
-        const MY_CLOUD = "roshankusta02"; // Apna Cloud Name yahan check karein
-        const MY_PRESET = "MY_CLOUD"; // Apna Unsigned Preset yahan likhein
+        const MY_CLOUD = "roshankusta02"; 
+        const MY_PRESET = "MY_CLOUD"; // <-- Yahan apna Preset name likhein
         // --------------------------------
 
         let mainUrl = "";
@@ -61,7 +61,7 @@
 
                 if (data.secure_url) {
                     mainUrl = data.secure_url;
-                    msgTag.innerText = "✅ Photo Upload Ho Gayi! Magic Button dabayein.";
+                    msgTag.innerText = "✅ Photo Upload Ho Gayi! Ab Magic Button dabayein.";
                     msgTag.style.color = "green";
                 } else {
                     msgTag.innerText = "❌ Error: " + (data.error ? data.error.message : "Upload fail");
