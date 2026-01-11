@@ -7,12 +7,12 @@
     <style>
         body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; text-align: center; padding: 20px; }
         .box { background: white; max-width: 500px; margin: 40px auto; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
-        h2 { color: #4f46e5; }
-        input[type="file"] { margin-bottom: 20px; padding: 10px; border: 1px dashed #4f46e5; width: 80%; border-radius: 10px; }
+        h2 { color: #4f46e5; margin-bottom: 20px; }
+        input[type="file"] { margin-bottom: 20px; padding: 10px; border: 1px dashed #4f46e5; width: 90%; border-radius: 10px; cursor: pointer; }
         button { background: #4f46e5; color: white; border: none; padding: 14px 20px; border-radius: 12px; cursor: pointer; margin: 8px 0; width: 100%; font-size: 16px; font-weight: 600; transition: 0.3s; }
-        button:hover { background: #4338ca; transform: translateY(-2px); }
+        button:hover { background: #4338ca; }
         img { max-width: 100%; margin-top: 25px; border-radius: 12px; display: none; border: 3px solid #e5e7eb; }
-        #msg { font-weight: bold; margin: 15px 0; }
+        #msg { font-weight: bold; margin: 15px 0; min-height: 20px; }
         .download-btn { display: none; margin-top: 15px; color: #4f46e5; text-decoration: none; font-weight: bold; }
     </style>
 </head>
@@ -29,18 +29,17 @@
 
         <img id="outputImg" src="">
         <br>
-        <a id="dlLink" href="#" download class="download-btn">⬇️ Download Enhanced Photo</a>
+        <a id="dlLink" href="#" download class="download-btn">⬇️ Download Photo</a>
     </div>
 
     <script>
-        // --- YAHAN APNI DETAILS DALEIN ---
-        const MY_CLOUD = "roshankusta02"; 
-        const MY_PRESET = "dyrhy8iv8"; // <-- Yahan apna Preset name likhein
-        // --------------------------------
+        // --- ⚠️ SIRF YE DO LINES BADLEIN ⚠️ ---
+        const MY_CLOUD = "dyrhy8iv8"; 
+        const MY_PRESET = "MY_CLOUD";
+        // -------------------------------------
 
         let mainUrl = "";
 
-        // Photo Upload Function
         document.getElementById('uploadInput').onchange = async (e) => {
             const file = e.target.files[0];
             if (!file) return;
@@ -61,19 +60,18 @@
 
                 if (data.secure_url) {
                     mainUrl = data.secure_url;
-                    msgTag.innerText = "✅ Photo Upload Ho Gayi! Ab Magic Button dabayein.";
+                    msgTag.innerText = "✅ Photo Upload Ho Gayi! Ab upar button dabayein.";
                     msgTag.style.color = "green";
                 } else {
                     msgTag.innerText = "❌ Error: " + (data.error ? data.error.message : "Upload fail");
                     msgTag.style.color = "red";
                 }
             } catch (err) {
-                msgTag.innerText = "❌ Connection Error! Check settings.";
+                msgTag.innerText = "❌ Connection Error!";
                 msgTag.style.color = "red";
             }
         };
 
-        // Magic Processing Function
         function processImage(type) {
             if(!mainUrl) {
                 alert("Pehle photo upload hone ka intezar karein!");
@@ -81,8 +79,8 @@
             }
             
             document.getElementById('msg').innerText = "AI Magic Chal raha hai... ✨";
-            
             let finalUrl = "";
+            
             if(type === 'enhance') finalUrl = mainUrl.replace('/upload/', '/upload/e_enhance,q_auto,f_auto/');
             if(type === 'bg-remove') finalUrl = mainUrl.replace('/upload/', '/upload/e_background_removal/');
             if(type === 'colorize') finalUrl = mainUrl.replace('/upload/', '/upload/e_colorize/');
